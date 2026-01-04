@@ -1,0 +1,97 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Vishal Agarwal",
+      "email": "vishal@gmail.com",
+      "roles": ["ADMIN", "QA_MANAGER"],
+      "preferences": {
+        "language": "en",
+        "notifications": ["EMAIL", "SMS"]
+      },
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Naina Agarwal",
+      "email": "naina@gmail.com",
+      "roles": ["USER"],
+      "preferences": {
+        "language": "en",
+        "notifications": ["PUSH"]
+      },
+      "active": true
+    }
+  ],
+
+  "products": [
+    {
+      "id": 101,
+      "name": "iPhone 15",
+      "price": 79999,
+      "categories": ["MOBILE", "APPLE"],
+      "specifications": {
+        "storage": ["128GB", "256GB"],
+        "colors": ["Black", "Blue"]
+      },
+      "ratings": [5, 4, 5, 4],
+      "inStock": true
+    }
+  ],
+
+  "orders": [
+    {
+      "id": 1001,
+      "userId": 1,
+      "items": [
+        {
+          "productId": 101,
+          "quantity": 1,
+          "price": 79999
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "CREATED",
+          "timestamp": "2025-01-01T10:00:00Z"
+        },
+        {
+          "status": "CONFIRMED",
+          "timestamp": "2025-01-01T10:05:00Z"
+        }
+      ],
+      "totalAmount": 79999
+    }
+  ],
+
+  "payments": [
+    {
+      "id": "PAY-001",
+      "orderId": 1001,
+      "methods": [
+        {
+          "type": "UPI",
+          "providers": ["GPay", "PhonePe"]
+        },
+        {
+          "type": "CARD",
+          "providers": ["VISA", "MASTERCARD"]
+        }
+      ],
+      "transactions": [
+        {
+          "txnId": "TXN10001",
+          "amount": 79999,
+          "status": "SUCCESS"
+        }
+      ]
+    }
+  ],
+
+  "health": {
+    "ping": "pong",
+    "status": "UP",
+    "timestamp": "2026-01-04T08:30:00Z"
+  }
+
+}
