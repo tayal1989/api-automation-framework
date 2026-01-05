@@ -1,47 +1,114 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Vishal Agarwal",
       "email": "vishal@gmail.com",
-      "roles": ["ADMIN", "QA_MANAGER"],
+      "roles": [
+        "ADMIN",
+        "QA_MANAGER"
+      ],
       "preferences": {
         "language": "en",
-        "notifications": ["EMAIL", "SMS"]
+        "notifications": [
+          "EMAIL",
+          "SMS"
+        ]
       },
       "active": true
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Naina Agarwal",
       "email": "naina@gmail.com",
-      "roles": ["USER"],
+      "roles": [
+        "USER"
+      ],
       "preferences": {
         "language": "en",
-        "notifications": ["PUSH"]
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": true
+    },
+    {
+      "id": "4",
+      "name": "Bimla Agarwal",
+      "email": "bimla.agarwal@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "hi",
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": false
+    },
+    {
+      "id": "a792",
+      "name": "Myra Agarwal",
+      "email": "myra@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "en",
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": true
+    },
+    {
+      "id": "e4e4",
+      "name": "Myra Agarwal",
+      "email": "myra@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "en",
+        "notifications": [
+          "PUSH"
+        ]
       },
       "active": true
     }
   ],
-
   "products": [
     {
-      "id": 101,
+      "id": "101",
       "name": "iPhone 15",
       "price": 79999,
-      "categories": ["MOBILE", "APPLE"],
+      "categories": [
+        "MOBILE",
+        "APPLE"
+      ],
       "specifications": {
-        "storage": ["128GB", "256GB"],
-        "colors": ["Black", "Blue"]
+        "storage": [
+          "128GB",
+          "256GB"
+        ],
+        "colors": [
+          "Black",
+          "Blue"
+        ]
       },
-      "ratings": [5, 4, 5, 4],
+      "ratings": [
+        5,
+        4,
+        5,
+        4
+      ],
       "inStock": true
     }
   ],
-
   "orders": [
     {
-      "id": 1001,
+      "id": "1001",
       "userId": 1,
       "items": [
         {
@@ -63,7 +130,6 @@
       "totalAmount": 79999
     }
   ],
-
   "payments": [
     {
       "id": "PAY-001",
@@ -71,11 +137,17 @@
       "methods": [
         {
           "type": "UPI",
-          "providers": ["GPay", "PhonePe"]
+          "providers": [
+            "GPay",
+            "PhonePe"
+          ]
         },
         {
           "type": "CARD",
-          "providers": ["VISA", "MASTERCARD"]
+          "providers": [
+            "VISA",
+            "MASTERCARD"
+          ]
         }
       ],
       "transactions": [
@@ -87,11 +159,9 @@
       ]
     }
   ],
-
   "health": {
     "ping": "pong",
     "status": "UP",
     "timestamp": "2026-01-04T08:30:00Z"
   }
-
 }
