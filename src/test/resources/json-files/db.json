@@ -76,6 +76,66 @@
         ]
       },
       "active": true
+    },
+    {
+      "id": "4",
+      "name": "Bimla Agarwal",
+      "email": "bimla.agarwal@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "hi",
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": false
+    },
+    {
+      "id": "4",
+      "name": "Bimla Agarwal",
+      "email": "bimla.agarwal@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "hi",
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": false
+    },
+    {
+      "id": "4",
+      "name": "Bimla Agarwal",
+      "email": "bimla.agarwal@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "hi",
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": false
+    },
+    {
+      "id": "4",
+      "name": "Bimla Agarwal",
+      "email": "bimla.agarwal@gmail.com",
+      "roles": [
+        "USER"
+      ],
+      "preferences": {
+        "language": "hi",
+        "notifications": [
+          "PUSH"
+        ]
+      },
+      "active": false
     }
   ],
   "products": [
@@ -163,5 +223,67 @@
     "ping": "pong",
     "status": "UP",
     "timestamp": "2026-01-04T08:30:00Z"
-  }
+  },
+  "students": [
+    {
+      "id": "stu-101",
+      "name": "Myra Agarwal",
+      "age": 6,
+      "active": true,
+      "marks": [
+        85,
+        90,
+        88
+      ],
+      "address": {
+        "city": "Gurgaon",
+        "state": "Haryana"
+      }
+    },
+    {
+      "id": "stu-102",
+      "name": "Naina Agarwal",
+      "age": 32,
+      "active": true,
+      "marks": [
+        78,
+        82,
+        80
+      ],
+      "address": {
+        "city": "Bhiwani",
+        "state": "Haryana"
+      }
+    }
+  ],
+  "authenticateUser": [
+    {
+      "id": "u-1",
+      "username": "naina",
+      "password": "password123",
+      "role": "USER",
+      "name": "Naina Agarwal"
+    },
+    {
+      "id": "u-2",
+      "username": "admin",
+      "password": "admin123",
+      "role": "ADMIN",
+      "name": "Admin User"
+    }
+  ],
+  "tokens": [
+    {
+      "token": "user-token-123",
+      "userId": "u-1",
+      "role": "USER",
+      "id": "f338"
+    },
+    {
+      "token": "admin-token-456",
+      "userId": "u-2",
+      "role": "ADMIN",
+      "id": "ab8d"
+    }
+  ]
 }
