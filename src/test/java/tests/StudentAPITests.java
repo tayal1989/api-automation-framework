@@ -164,4 +164,30 @@ public class StudentAPITests extends BaseTest {
         assertTrue(students.get(1).getMarks().contains(82));
         assertEquals(students.get(1).getAddress().getState(), "Haryana");
     }
+
+    @Test(priority = 8)
+    public void getAllStudentsUsingProxy() {
+
+        List<Student> students =
+                given()
+                        .proxy("127.0.0.1", 8888)
+                        .when()
+                        .get("/students")
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .body()
+                        .jsonPath()
+                        .getList("", Student.class);
+
+        System.out.println(students.size());
+        System.out.println(students.get(1).getName());
+        System.out.println(students.get(1).getMarks());
+        System.out.println(students.get(1).getAddress().getState());
+
+        assertEquals(students.size(), 2);
+        assertEquals(students.get(1).getName(), "Naina Agarwal");
+        assertTrue(students.get(1).getMarks().contains(82));
+        assertEquals(students.get(1).getAddress().getState(), "Haryana");
+    }
 }
