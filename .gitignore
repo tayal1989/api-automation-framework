@@ -3,6 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
+.trackify.jsonl
+.vscode
+.idea/
+.allure/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

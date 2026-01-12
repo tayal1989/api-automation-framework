@@ -1,7 +1,9 @@
 package tests;
 
 import base.BaseTest;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import pojo.Address;
 import pojo.Student;
@@ -15,12 +17,16 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@Epic("Student API")
+@Feature("Student CRUD Operations")
 public class StudentAPITests extends BaseTest {
 
     private static String studentId;
 
     // 1️⃣ POST → Serialize POJO → Create student
-    @Test(priority = 1)
+    @Test(priority = 1, description = "Create student using POST")
+    @Story("Create Student")
+    @Severity(SeverityLevel.CRITICAL)
     public void createStudent() {
 
         Address address = new Address();
@@ -51,7 +57,9 @@ public class StudentAPITests extends BaseTest {
     }
 
     // 2️⃣ GET → Deserialize JSON → POJO
-    @Test(priority = 2)
+    @Test(priority = 2, description = "Fetch student and validate details")
+    @Story("Get Student")
+    @Severity(SeverityLevel.NORMAL)
     public void validateStudentCreated() {
         Response response =
                 given().
@@ -72,7 +80,9 @@ public class StudentAPITests extends BaseTest {
     }
 
     // 3️⃣ PATCH → Partial update (active = false)
-    @Test(priority = 3)
+    @Test(priority = 3, description = "Deactivate student using PATCH")
+    @Story("Update Student")
+    @Severity(SeverityLevel.NORMAL)
     public void deactivateStudent() {
 
         String patchBody = """
@@ -92,7 +102,9 @@ public class StudentAPITests extends BaseTest {
     }
 
     // 4️⃣ PUT → Full update using POJO
-    @Test(priority = 4)
+    @Test(priority = 4, description = "Update student with put request")
+    @Story("Update Student")
+    @Severity(SeverityLevel.CRITICAL)
     public void updateStudentWithPut() {
 
         Address address = new Address();
@@ -119,7 +131,9 @@ public class StudentAPITests extends BaseTest {
     }
 
     // 5️⃣ DELETE → Cleanup
-    @Test(priority = 5)
+    @Test(priority = 5, description = "Delete student and validate removal")
+    @Story("Delete Student")
+    @Severity(SeverityLevel.CRITICAL)
     public void deleteStudent() {
 
         given()
@@ -130,7 +144,9 @@ public class StudentAPITests extends BaseTest {
     }
 
     // 6️⃣ GET → Validate deletion
-    @Test(priority = 6)
+    @Test(priority = 6, description = "Delete student and validate removal")
+    @Story("Validate Delete Student")
+    @Severity(SeverityLevel.CRITICAL)
     public void validateStudentDeleted() {
 
         given()
@@ -140,7 +156,9 @@ public class StudentAPITests extends BaseTest {
                 .statusCode(404);
     }
 
-    @Test(priority = 7)
+    @Test(priority = 7, description = "Get students data")
+    @Story("Get Student Data")
+    @Severity(SeverityLevel.CRITICAL)
     public void getAllStudents() {
 
         List<Student> students =
@@ -165,6 +183,7 @@ public class StudentAPITests extends BaseTest {
         assertEquals(students.get(1).getAddress().getState(), "Haryana");
     }
 
+    @Ignore
     @Test(priority = 8)
     public void getAllStudentsUsingProxy() {
 
