@@ -1,4 +1,4 @@
-package tests.CRUD;
+package tests;
 
 import io.restassured.RestAssured;
 import org.testng.annotations.BeforeClass;
@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-public class CrudTest {
+public class TestCrudAPIsForUser {
 
     private static String userId;
 

@@ -1,11 +1,11 @@
-package tests.DELETE;
+package tests;
 
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class DeleteUserAPI {
+public class TestDeleteUser {
     @Test
     public void deleteUser() {
 

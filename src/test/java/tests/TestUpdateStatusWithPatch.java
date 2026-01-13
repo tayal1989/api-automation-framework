@@ -1,4 +1,4 @@
-package tests.PATCH;
+package tests;
 
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;
@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class UpdateStatus {
+public class TestUpdateStatusWithPatch {
 
     @Test
     public void deactivateUser() {

@@ -1,4 +1,4 @@
-package org.vishal.api.report;
+package reports;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

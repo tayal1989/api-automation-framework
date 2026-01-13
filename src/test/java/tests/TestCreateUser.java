@@ -1,4 +1,4 @@
-package tests.POST;
+package tests;
 
 import base.BaseTest;
 import org.testng.annotations.Test;
@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class CreateUserTest extends BaseTest {
+public class TestCreateUser extends BaseTest {
 
     @Test
     public void testCreateAnotherUser() {

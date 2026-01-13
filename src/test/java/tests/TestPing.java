@@ -1,4 +1,4 @@
-package tests.GET;
+package tests;
 
 import base.BaseTest;
 import io.restassured.RestAssured;
@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-public class PingTest extends BaseTest {
+public class TestPing extends BaseTest {
 
     @Test
     public void testPing() {

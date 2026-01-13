@@ -168,7 +168,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.vishal.api.report.AllurePDFReportGenerator</mainClass>
+                            <mainClass>reports.AllurePDFReportGenerator</mainClass>
                             <arguments>
                                 <argument>${project.build.directory}/allure-results</argument>
                                 <argument>${project.build.directory}/pdf-reports</argument>

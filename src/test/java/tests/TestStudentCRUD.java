@@ -1,12 +1,13 @@
 package tests;
 
 import base.BaseTest;
+import contants.Endpoints;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import pojo.Address;
-import pojo.Student;
+import models.Address;
+import models.Student;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import static org.testng.Assert.assertTrue;
 
 @Epic("Student API")
 @Feature("Student CRUD Operations")
-public class StudentAPITests extends BaseTest {
+public class TestStudentCRUD extends BaseTest {
 
     private static String studentId;
 
@@ -46,7 +47,7 @@ public class StudentAPITests extends BaseTest {
                         .header("Content-Type", "application/json")
                         .body(student). // 🔥 Serialization happens here
                 when()
-                        .post("/students").
+                        .post(Endpoints.STUDENTS).
                 then()
                         .statusCode(201)
                         .extract()
@@ -63,8 +64,9 @@ public class StudentAPITests extends BaseTest {
     public void validateStudentCreated() {
         Response response =
                 given().
+                        pathParam("id", studentId).
                 when()
-                        .get("/students/" + studentId).
+                        .get(Endpoints.STUDENT_BY_ID).
                 then()
                         .statusCode(200)
                         .extract()
@@ -72,6 +74,7 @@ public class StudentAPITests extends BaseTest {
 
         Student student = response.as(Student.class); // 🔥 Deserialization
 
+        System.out.println(response.asPrettyString());
         assertThat(student.getName(), equalTo("Vishal Agarwal"));
         assertThat(student.getAge(), equalTo(37));
         assertThat(student.isActive(), equalTo(true));
@@ -93,9 +96,10 @@ public class StudentAPITests extends BaseTest {
 
         given()
                 .header("Content-Type", "application/json")
+                .pathParam("id", studentId)
                 .body(patchBody)
                 .when()
-                .patch("/students/" + studentId)
+                .patch(Endpoints.STUDENT_BY_ID)
                 .then()
                 .statusCode(200)
                 .body("active", equalTo(false));
@@ -121,9 +125,10 @@ public class StudentAPITests extends BaseTest {
 
         given()
                 .header("Content-Type", "application/json")
+                .pathParam("id", studentId)
                 .body(updatedStudent)
                 .when()
-                .put("/students/" + studentId)
+                .put(Endpoints.STUDENT_BY_ID)
                 .then()
                 .statusCode(200)
                 .body("age", equalTo(37))
@@ -137,8 +142,10 @@ public class StudentAPITests extends BaseTest {
     public void deleteStudent() {
 
         given()
+                .header("Content-Type", "application/json")
+                .pathParam("id", studentId)
                 .when()
-                .delete("/students/" + studentId)
+                .delete(Endpoints.STUDENT_BY_ID)
                 .then()
                 .statusCode(200);
     }
@@ -150,8 +157,10 @@ public class StudentAPITests extends BaseTest {
     public void validateStudentDeleted() {
 
         given()
+                .header("Content-Type", "application/json")
+                .pathParam("id", studentId)
                 .when()
-                .get("/students/" + studentId)
+                .get(Endpoints.STUDENT_BY_ID)
                 .then()
                 .statusCode(404);
     }
@@ -164,7 +173,7 @@ public class StudentAPITests extends BaseTest {
         List<Student> students =
                 given()
                         .when()
-                        .get("/students")
+                        .get(Endpoints.STUDENTS)
                         .then()
                         .statusCode(200)
                         .extract()
