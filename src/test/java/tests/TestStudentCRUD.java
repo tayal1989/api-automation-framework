@@ -1,7 +1,7 @@
 package tests;
 
 import base.BaseTest;
-import contants.Endpoints;
+import constants.Endpoints;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Ignore;
