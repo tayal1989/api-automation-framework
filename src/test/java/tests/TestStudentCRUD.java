@@ -6,6 +6,7 @@ import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
+import org.testng.Assert;
 import models.Address;
 import models.Student;
 
@@ -54,6 +55,7 @@ public class TestStudentCRUD extends BaseTest {
                         .response();
 
         studentId = response.jsonPath().getString("id");
+        Assert.assertEquals(response.getStatusCode(), 201, "Student Created in Records");
         System.out.println("Created student with id: " + studentId);
     }
 
