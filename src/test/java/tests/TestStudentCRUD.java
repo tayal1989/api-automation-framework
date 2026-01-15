@@ -4,9 +4,8 @@ import base.BaseTest;
 import constants.Endpoints;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
-import org.testng.annotations.Ignore;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
-import org.testng.Assert;
 import models.Address;
 import models.Student;
 
@@ -14,10 +13,8 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.hamcrest.Matchers.*;
+import static org.testng.Assert.*;
 
 @Epic("Student API")
 @Feature("Student CRUD Operations")
@@ -46,16 +43,31 @@ public class TestStudentCRUD extends BaseTest {
         Response response =
                 given()
                         .header("Content-Type", "application/json")
-                        .body(student). // 🔥 Serialization happens here
-                when()
-                        .post(Endpoints.STUDENTS).
-                then()
-                        .statusCode(201)
+                        .body(student) // 🔥 Serialization happens here
+                .when()
+                        .post(Endpoints.STUDENTS)
+                .then()
                         .extract()
                         .response();
 
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 201, "Expected status code 201 Created");
+        assertTrue(response.getStatusLine().contains("Created"), "Status line should contain 'Created'");
+
+        // Header assertions
+        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getTime() < 5000, "Response time should be less than 5 seconds");
+
+        // Body assertions
         studentId = response.jsonPath().getString("id");
-        Assert.assertEquals(response.getStatusCode(), 201, "Student Created in Records");
+        assertNotNull(studentId, "Student ID should not be null");
+        assertEquals(response.jsonPath().getString("name"), "Vishal Agarwal", "Name should match");
+        assertEquals(response.jsonPath().getInt("age"), 37, "Age should be 37");
+        assertTrue(response.jsonPath().getBoolean("active"), "Student should be active");
+        assertEquals(response.jsonPath().getString("address.city"), "Kolkata", "City should be Kolkata");
+        assertEquals(response.jsonPath().getString("address.state"), "Bengal", "State should be Bengal");
+        assertThat(response.jsonPath().getList("marks"), hasItems(88, 92, 90));
+
         System.out.println("Created student with id: " + studentId);
     }
 
@@ -65,23 +77,40 @@ public class TestStudentCRUD extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     public void validateStudentCreated() {
         Response response =
-                given().
-                        pathParam("id", studentId).
-                when()
-                        .get(Endpoints.STUDENT_BY_ID).
-                then()
-                        .statusCode(200)
+                given()
+                        .pathParam("id", studentId)
+                .when()
+                        .get(Endpoints.STUDENT_BY_ID)
+                .then()
                         .extract()
                         .response();
 
-        Student student = response.as(Student.class); // 🔥 Deserialization
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK");
+        assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
-        System.out.println(response.asPrettyString());
+        // Header assertions
+        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getTime() < 3000, "Response time should be less than 3 seconds");
+
+        // Deserialize and validate
+        Student student = response.as(Student.class); // 🔥 Deserialization
+        assertNotNull(student, "Student object should not be null");
+
+        // Student field assertions
+        assertEquals(student.getId(), studentId, "Student ID should match");
         assertThat(student.getName(), equalTo("Vishal Agarwal"));
         assertThat(student.getAge(), equalTo(37));
         assertThat(student.isActive(), equalTo(true));
         assertThat(student.getMarks(), hasItems(88, 92));
+        assertThat(student.getMarks().size(), equalTo(3));
+
+        // Address assertions
+        assertNotNull(student.getAddress(), "Address should not be null");
         assertThat(student.getAddress().getCity(), equalTo("Kolkata"));
+        assertThat(student.getAddress().getState(), equalTo("Bengal"));
+
+        System.out.println(response.asPrettyString());
     }
 
     // 3️⃣ PATCH → Partial update (active = false)
@@ -96,15 +125,29 @@ public class TestStudentCRUD extends BaseTest {
         }
         """;
 
-        given()
-                .header("Content-Type", "application/json")
-                .pathParam("id", studentId)
-                .body(patchBody)
+        Response response =
+                given()
+                        .header("Content-Type", "application/json")
+                        .pathParam("id", studentId)
+                        .body(patchBody)
                 .when()
-                .patch(Endpoints.STUDENT_BY_ID)
+                        .patch(Endpoints.STUDENT_BY_ID)
                 .then()
-                .statusCode(200)
-                .body("active", equalTo(false));
+                        .extract()
+                        .response();
+
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK");
+        assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
+
+        // Header assertions
+        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+
+        // Body assertions - verify only 'active' changed, other fields intact
+        assertFalse(response.jsonPath().getBoolean("active"), "Student should be deactivated");
+        assertEquals(response.jsonPath().getString("name"), "Vishal Agarwal", "Name should remain unchanged");
+        assertEquals(response.jsonPath().getInt("age"), 37, "Age should remain unchanged");
+        assertEquals(response.jsonPath().getString("id"), studentId, "ID should remain unchanged");
     }
 
     // 4️⃣ PUT → Full update using POJO
@@ -125,16 +168,33 @@ public class TestStudentCRUD extends BaseTest {
         updatedStudent.setMarks(List.of(90, 91, 93));
         updatedStudent.setAddress(address);
 
-        given()
-                .header("Content-Type", "application/json")
-                .pathParam("id", studentId)
-                .body(updatedStudent)
+        Response response =
+                given()
+                        .header("Content-Type", "application/json")
+                        .pathParam("id", studentId)
+                        .body(updatedStudent)
                 .when()
-                .put(Endpoints.STUDENT_BY_ID)
+                        .put(Endpoints.STUDENT_BY_ID)
                 .then()
-                .statusCode(200)
-                .body("age", equalTo(37))
-                .body("address.city", equalTo("Mumbai"));
+                        .extract()
+                        .response();
+
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK");
+        assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
+
+        // Header assertions
+        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getTime() < 3000, "Response time should be less than 3 seconds");
+
+        // Body assertions - verify all fields updated
+        assertEquals(response.jsonPath().getString("id"), studentId, "ID should match");
+        assertEquals(response.jsonPath().getString("name"), "Vishal Ram Avtar Agarwal", "Name should be updated");
+        assertEquals(response.jsonPath().getInt("age"), 37, "Age should be 37");
+        assertFalse(response.jsonPath().getBoolean("active"), "Student should be inactive");
+        assertEquals(response.jsonPath().getString("address.city"), "Mumbai", "City should be updated to Mumbai");
+        assertEquals(response.jsonPath().getString("address.state"), "Maharashtra", "State should be updated to Maharashtra");
+        assertThat(response.jsonPath().getList("marks"), hasItems(90, 91, 93));
     }
 
     // 5️⃣ DELETE → Cleanup
@@ -143,81 +203,133 @@ public class TestStudentCRUD extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     public void deleteStudent() {
 
-        given()
-                .header("Content-Type", "application/json")
-                .pathParam("id", studentId)
+        Response response =
+                given()
+                        .header("Content-Type", "application/json")
+                        .pathParam("id", studentId)
                 .when()
-                .delete(Endpoints.STUDENT_BY_ID)
+                        .delete(Endpoints.STUDENT_BY_ID)
                 .then()
-                .statusCode(200);
+                        .extract()
+                        .response();
+
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK for successful deletion");
+        assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
+
+        // Response time assertion
+        assertTrue(response.getTime() < 3000, "Delete operation should complete within 3 seconds");
+
+        System.out.println("Student with id " + studentId + " deleted successfully");
     }
 
     // 6️⃣ GET → Validate deletion
-    @Test(priority = 6, description = "Delete student and validate removal")
+    @Test(priority = 6, description = "Verify student no longer exists after deletion")
     @Story("Validate Delete Student")
     @Severity(SeverityLevel.CRITICAL)
     public void validateStudentDeleted() {
 
-        given()
-                .header("Content-Type", "application/json")
-                .pathParam("id", studentId)
+        Response response =
+                given()
+                        .header("Content-Type", "application/json")
+                        .pathParam("id", studentId)
                 .when()
-                .get(Endpoints.STUDENT_BY_ID)
+                        .get(Endpoints.STUDENT_BY_ID)
                 .then()
-                .statusCode(404);
+                        .extract()
+                        .response();
+
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 404, "Expected status code 404 Not Found");
+        assertTrue(response.getStatusLine().contains("Not Found"), "Status line should contain 'Not Found'");
+
+        // Response time assertion
+        assertTrue(response.getTime() < 3000, "Response time should be less than 3 seconds");
+
+        System.out.println("Verified: Student with id " + studentId + " no longer exists (404)");
     }
 
-    @Test(priority = 7, description = "Get students data")
-    @Story("Get Student Data")
+    // 7️⃣ GET → Get all students
+    @Test(priority = 7, description = "Get all students data")
+    @Story("Get All Students")
     @Severity(SeverityLevel.CRITICAL)
     public void getAllStudents() {
 
-        List<Student> students =
+        Response response =
                 given()
-                        .when()
+                .when()
                         .get(Endpoints.STUDENTS)
-                        .then()
-                        .statusCode(200)
+                .then()
                         .extract()
-                        .body()
-                        .jsonPath()
-                        .getList("", Student.class);
+                        .response();
 
-        System.out.println(students.size());
-        System.out.println(students.get(1).getName());
-        System.out.println(students.get(1).getMarks());
-        System.out.println(students.get(1).getAddress().getState());
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK");
+        assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
-        assertEquals(students.size(), 2);
-        assertEquals(students.get(1).getName(), "Naina Agarwal");
-        assertTrue(students.get(1).getMarks().contains(82));
-        assertEquals(students.get(1).getAddress().getState(), "Haryana");
+        // Header assertions
+        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getTime() < 5000, "Response time should be less than 5 seconds");
+
+        // Deserialize response
+        List<Student> students = response.jsonPath().getList("", Student.class);
+
+        // Collection assertions
+        assertNotNull(students, "Students list should not be null");
+        assertFalse(students.isEmpty(), "Students list should not be empty");
+        assertEquals(students.size(), 2, "Should have exactly 2 students");
+
+        // First student assertions
+        assertNotNull(students.get(0), "First student should not be null");
+        assertNotNull(students.get(0).getId(), "First student ID should not be null");
+
+        // Second student assertions
+        Student secondStudent = students.get(1);
+        assertNotNull(secondStudent, "Second student should not be null");
+        assertEquals(secondStudent.getName(), "Naina Agarwal", "Second student name should be Naina Agarwal");
+        assertTrue(secondStudent.getMarks().contains(82), "Second student marks should contain 82");
+        assertNotNull(secondStudent.getAddress(), "Second student address should not be null");
+        assertEquals(secondStudent.getAddress().getState(), "Haryana", "Second student state should be Haryana");
+
+        System.out.println("Total students: " + students.size());
+        System.out.println("Student names: " + students.stream().map(Student::getName).toList());
     }
 
-    @Ignore
-    @Test(priority = 8)
+    @Test(priority = 8, description = "Get all students using proxy")
+    @Story("Get All Students via Proxy")
+    @Severity(SeverityLevel.MINOR)
     public void getAllStudentsUsingProxy() {
 
-        List<Student> students =
+        // Skip this test - proxy not configured
+        throw new SkipException("Skipping test: Proxy server not configured at 127.0.0.1:8888");
+
+        /*
+        Response response =
                 given()
                         .proxy("127.0.0.1", 8888)
-                        .when()
+                .when()
                         .get("/students")
-                        .then()
-                        .statusCode(200)
+                .then()
                         .extract()
-                        .body()
-                        .jsonPath()
-                        .getList("", Student.class);
+                        .response();
 
-        System.out.println(students.size());
-        System.out.println(students.get(1).getName());
-        System.out.println(students.get(1).getMarks());
-        System.out.println(students.get(1).getAddress().getState());
+        // Status code assertions
+        assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK");
+        assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
-        assertEquals(students.size(), 2);
+        // Deserialize response
+        List<Student> students = response.jsonPath().getList("", Student.class);
+
+        // Collection assertions
+        assertNotNull(students, "Students list should not be null");
+        assertEquals(students.size(), 2, "Should have exactly 2 students");
+
+        // Validate second student
         assertEquals(students.get(1).getName(), "Naina Agarwal");
         assertTrue(students.get(1).getMarks().contains(82));
         assertEquals(students.get(1).getAddress().getState(), "Haryana");
+
+        System.out.println("Proxy test - Total students: " + students.size());
+        */
     }
 }
