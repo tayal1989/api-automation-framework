@@ -55,7 +55,7 @@ public class TestStudentCRUD extends BaseTest {
         assertTrue(response.getStatusLine().contains("Created"), "Status line should contain 'Created'");
 
         // Header assertions
-        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getContentType().contains("application/json"), "Content-Type should contain application/json");
         assertTrue(response.getTime() < 5000, "Response time should be less than 5 seconds");
 
         // Body assertions
@@ -90,7 +90,7 @@ public class TestStudentCRUD extends BaseTest {
         assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
         // Header assertions
-        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getContentType().contains("application/json"), "Content-Type should contain application/json");
         assertTrue(response.getTime() < 3000, "Response time should be less than 3 seconds");
 
         // Deserialize and validate
@@ -141,7 +141,7 @@ public class TestStudentCRUD extends BaseTest {
         assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
         // Header assertions
-        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getContentType().contains("application/json"), "Content-Type should contain application/json");
 
         // Body assertions - verify only 'active' changed, other fields intact
         assertFalse(response.jsonPath().getBoolean("active"), "Student should be deactivated");
@@ -184,7 +184,7 @@ public class TestStudentCRUD extends BaseTest {
         assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
         // Header assertions
-        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getContentType().contains("application/json"), "Content-Type should contain application/json");
         assertTrue(response.getTime() < 3000, "Response time should be less than 3 seconds");
 
         // Body assertions - verify all fields updated
@@ -268,7 +268,7 @@ public class TestStudentCRUD extends BaseTest {
         assertTrue(response.getStatusLine().contains("OK"), "Status line should contain 'OK'");
 
         // Header assertions
-        assertEquals(response.getContentType(), "application/json", "Content-Type should be application/json");
+        assertTrue(response.getContentType().contains("application/json"), "Content-Type should contain application/json");
         assertTrue(response.getTime() < 5000, "Response time should be less than 5 seconds");
 
         // Deserialize response

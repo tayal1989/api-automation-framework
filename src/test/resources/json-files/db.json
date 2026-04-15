@@ -482,18 +482,5 @@
       "name": "Admin User"
     }
   ],
-  "tokens": [
-    {
-      "token": "user-token-123",
-      "userId": "u-1",
-      "role": "USER",
-      "id": "f338"
-    },
-    {
-      "token": "admin-token-456",
-      "userId": "u-2",
-      "role": "ADMIN",
-      "id": "ab8d"
-    }
-  ]
+  "tokens": []
 }
